@@ -2,11 +2,12 @@
 import { useState } from "react";
 import Navbar from "../../component/navbar";
 import { register } from "@/logic/user";
+import { picture_mapping, picture_paths } from "@/logic/picture";
 export default function page(params) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [pic, setPic] = useState("default");
+  const [pic, setPic] = useState("picture/user.png");
   const [color, setColor] = useState("#FFFFFF");
 
   const submit = async (e, userData) => {
@@ -64,11 +65,11 @@ export default function page(params) {
               </div>
               <div className="mb-3 d-flex justify-content-center">
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
+                  src={pic}
                   width="80"
                   height="80"
                   className=""
-                  style={{ backgroundColor: color, "border-radius": "100px" }}
+                  style={{ backgroundColor: color, "border-radius": "60px" }}
                 />
               </div>
               <div className="mb-3">
@@ -80,8 +81,13 @@ export default function page(params) {
                   onChange={(event) => setPic(event.target.value)}
                   value={pic}
                 >
-                  <option value="default">Default</option>
-                  <option value="cat">Cat</option>
+                  {picture_paths().map((path, i) => {
+                    return (
+                      <option key={`option${i}`} value={path}>
+                        {picture_mapping(path)}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
               <div className="mb-3">
