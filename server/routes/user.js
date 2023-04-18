@@ -9,8 +9,8 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-// const requireAuth = require('../middleware/requireAuth')
-// router.use(requireAuth)
+const { requireAuth } = require("../middleware/auth");
+router.use(requireAuth)
 
 // GET all users
 router.get("/", (req, res) => {

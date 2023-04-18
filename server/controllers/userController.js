@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../models/userModel");
-const { sendTokenResponse, authorize } = require("../middleware/auth");
+const { sendTokenResponse } = require("../middleware/auth");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const mongoose = require("mongoose");

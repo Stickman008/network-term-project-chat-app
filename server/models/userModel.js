@@ -16,7 +16,20 @@ const userSchema = mongoose.Schema({
   },
   icon: {
     type: String,
-    enum: ["ANONYMOUS", "CAT", "DOG", "BIRD", "TREE"],
+    enum: [
+      "ANONYMOUS", // Black
+      "CAT", // Gray
+      "DOG",  // Brown
+      "BIRD", // Orange
+      "FISH", // Blue
+      "SUN", // Yellow
+      "MOON", // Gray + White
+      "ROSE", // Red
+      "LAVENDER", // Purple
+      "LEAF", // Green
+      "RUBIK", // Blue + Red + Yellow
+      "MUSIC",  // Rainbow
+    ],
     default: "ANONYMOUS"
   }
 }, {
