@@ -10,13 +10,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
+  nickname: {
     type: String,
     required: true,
   },
-  pic: {
+  icon: {
     type: String,
-    default: "https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
+    enum: ["ANONYMOUS", "CAT", "DOG", "BIRD", "TREE"],
+    default: "ANONYMOUS"
   }
 }, {
   timeStamps: true,

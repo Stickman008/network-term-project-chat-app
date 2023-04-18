@@ -1,7 +1,8 @@
 export default function page(params) {
   return (
     <>
-      <p>chat/chatId</p>
+      <p>chat</p>
+      <p>test</p>
     </>
   );
 }
