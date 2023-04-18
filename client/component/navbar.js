@@ -17,6 +17,7 @@ export default function navbar(params) {
               width="30"
               height="30"
               className=""
+              style={{"backgroundColor": "yellow", "border-radius": "15px"}}
             />
             <p className="d-inline-block mx-2 my-0 fs-5">Username</p>
             {/* login, signup, logout, edit*/}
