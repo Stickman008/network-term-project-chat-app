@@ -1,8 +1,14 @@
+"use client";
+import { picture_mapping, picture_paths } from "@/logic/picture";
+import { useState } from "react";
 import { BiChat, BiEditAlt } from "react-icons/bi";
 import { BsPersonAdd } from "react-icons/bs";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 
 export default function navbar(params) {
+  const [pic, setPic] = useState("/user.png");
+  const [color, setColor] = useState("#FFFFFF");
+
   return (
     <>
       <nav className="navbar navbar-light bg-light">
@@ -13,11 +19,11 @@ export default function navbar(params) {
           </a>
           <div className="d-inline-flex align-items-center m-0">
             <img
-              src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
+              src={pic}
               width="30"
               height="30"
               className=""
-              style={{ backgroundColor: "yellow", borderRadius: "15px" }}
+              style={{ backgroundColor: color, "border-radius": "60px" }}
             />
             <p className="d-inline-block mx-2 my-0 fs-5">Username</p>
             {/* login, signup, logout, edit*/}

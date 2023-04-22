@@ -1,4 +1,8 @@
-const pic_map = { "picture/user.png": "Default", "picture/pet.png": "Cat" };
+const pic_map = {
+  "user.png": "Default",
+  "pet.png": "Cat",
+  "discord.png": "Discord",
+};
 const picture_mapping = (path) => {
   return pic_map[path];
 };

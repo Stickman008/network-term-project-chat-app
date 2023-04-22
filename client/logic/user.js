@@ -1,5 +1,9 @@
 const API_URL = "http://localhost:5000/api/v1/auth";
 
+const updateUser = async (userData) => {
+  console.log(userData);
+};
+
 const register = async (userData) => {
   const respone = await fetch(`${API_URL}/register`, {
     method: "POST",
@@ -37,4 +41,4 @@ const login = async (userData) => {
   }
 };
 
-module.exports = { register, login };
+module.exports = { updateUser, register, login };
