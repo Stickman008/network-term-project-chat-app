@@ -9,7 +9,7 @@ const allMessages = async (req, res) => {
     if (chat.isUserIn(req.user._id)) {
       const messages = await Message.find({ chat: req.params.chatId })
         .sort({ createdAt: 1 })
-        .populate("content.event");
+        //.populate("content.event");
       res.status(200).json(messages);
     } else {
       res

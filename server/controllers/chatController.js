@@ -8,15 +8,17 @@ const fetchChats = async (req, res) => {
 
   try {
     let chat = null;
-    if (currentUser.isMusician()) {
-      chat = await Chat.find({ musician: currentUser })
-        .sort({ updatedAt: -1 })
-        .populate("organizer");
-    } else {
-      chat = await Chat.find({ organizer: currentUser })
-        .sort({ updatedAt: -1 })
-        .populate("musician");
-    }
+    chat = await Chat.filter(chat => chat.users.includes(currentUser))
+      .sort({ updatedAt: -1 });
+    // if (currentUser.isMusician()) {
+    //   chat = await Chat.find({ musician: currentUser })
+    //     .sort({ updatedAt: -1 })
+    //     //.populate("organizer");
+    // } else {
+    //   chat = await Chat.find({ organizer: currentUser })
+    //     .sort({ updatedAt: -1 })
+    //     //.populate("musician");
+    // }
 
     res.status(200).json(chat);
   } catch (error) {
@@ -43,19 +45,23 @@ const accessChat = async (req, res) => {
     }
 
     // create new chat if chat haven't already exists
-    if (user_1.isMusician() && user_2.isOrganizer()) {
+    // if (user_1.isMusician() && user_2.isOrganizer()) {
       chat = await Chat.create({
-        organizer: user_2._id,
-        musician: user_1._id,
+        users : [user_1, user_2]
       });
-    } else if (user_1.isOrganizer() && user_2.isMusician()) {
-      chat = await Chat.create({
-        organizer: user_1._id,
-        musician: user_2._id,
-      });
-    } else {
-      throw Error("User role is not valid");
-    }
+      // chat = await Chat.create({
+      //   organizer: user_2._id,
+      //   musician: user_1._id,
+      // });
+    // } else if (user_1.isOrganizer() && user_2.isMusician()) {
+    //   chat = await Chat.create({
+    //     organizer: user_1._id,
+    //     musician: user_2._id,
+    //   });
+    // } 
+    // else {
+    //   throw Error("User role is not valid");
+    // }
     console.log("Create new chat");
     res.status(201).json(chat);
   } catch (error) {
@@ -65,8 +71,8 @@ const accessChat = async (req, res) => {
 
 const getChat = async (req, res) => {
   try {
-    const chat = await Chat.findById(req.params.id).populate("organizer");
-
+    //const chat = await Chat.findById(req.params.id).populate("organizer");
+    const chat = await Chat.findById(req.params.id);
     res.status(200).json(chat);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -84,9 +90,9 @@ const deleteChat = async (req, res) => {
       throw Error("Invalid user_id");
     }
     const chat = await Chat.findById(id);
-    if (String(chat.organizer) != user_id && String(chat.musician) != user_id) {
-      throw Error("Authentication failed");
-    }
+    // if (String(chat.organizer) != user_id && String(chat.musician) != user_id) {
+    //   throw Error("Authentication failed");
+    // }
     const chat_del = await Chat.findByIdAndDelete(id);
     res.status(200).json(chat_del);
   } catch (error) {
@@ -104,13 +110,13 @@ const updateChat = async (req, res) => {
     if (!mongoose.isValidObjectId(user_id)) {
       throw Error("Invalid user_id");
     }
-    const chat_check = await Chat.findById(id);
-    if (
-      String(chat_check.organizer) != user_id &&
-      String(chat_check.musician) != user_id
-    ) {
-      throw Error("Authentication failed");
-    }
+    // const chat_check = await Chat.findById(id);
+    // if (
+    //   String(chat_check.organizer) != user_id &&
+    //   String(chat_check.musician) != user_id
+    // ) {
+    //   throw Error("Authentication failed");
+    // }
     delete req.body.user_id;
     const chat = await Chat.findByIdAndUpdate(id, req.body, {
       returnDocument: "after",

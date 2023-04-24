@@ -50,7 +50,6 @@ const getUser = async (req, res) => {
     }
 
     const user = await User.findById(id);
-    console.log(user.wage);
 
     res.status(200).json(user);
   } catch (error) {
