@@ -7,14 +7,19 @@ import { picture_mapping, picture_paths } from "@/logic/picture";
 export default function page(params) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
   const [icon, setIcon] = useState("/user.png");
   const [color, setColor] = useState("#FFFFFF");
 
   const submit = async (e, userData) => {
     e.preventDefault();
-    // const result = await register(userData);
-    console.log(userData);
+    const result = await register(userData);
+    if (result) {
+      alert("register complete");
+      window.location.href = "/login";
+    } else {
+      alert("register unsuccessful");
+    }
   };
 
   return (
@@ -26,7 +31,9 @@ export default function page(params) {
           <div className="card-body">
             <h5 className="card-title text-center">Signup Form</h5>
             <form
-              onSubmit={(e) => submit(e, { email, password, name, pic, color })}
+              onSubmit={(e) =>
+                submit(e, { email, password, nickname, icon, color })
+              }
             >
               <div className="mb-3">
                 <label className="form-label">Email address</label>
@@ -56,8 +63,8 @@ export default function page(params) {
                   type="text"
                   id="form3"
                   className="form-control form-control-md"
-                  onChange={(event) => setName(event.target.value)}
-                  value={name}
+                  onChange={(event) => setNickname(event.target.value)}
+                  value={nickname}
                   required
                 />
               </div>

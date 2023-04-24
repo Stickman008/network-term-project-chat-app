@@ -7,7 +7,7 @@ const {
   getChat,
   deleteChat,
   updateChat,
-} = require("../controllers/chatConntroller");
+} = require("../controllers/chatController");
 
 const { requireAuth } = require("../middleware/auth");
 router.use(requireAuth);

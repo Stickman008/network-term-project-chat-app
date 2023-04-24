@@ -7,7 +7,13 @@ export default function page(params) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const submit = async () => {
-    // const result = await login({ email, password });
+    const result = await login({ email, password });
+    if (result) {
+      alert("login complete");
+      window.location.href = "/";
+    } else {
+      alert("login unsuccessful");
+    }
     console.log({ email, password });
   };
 

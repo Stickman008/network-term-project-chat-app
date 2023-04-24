@@ -1,11 +1,11 @@
-const API_URL = "http://localhost:5000/api/v1/auth";
+const API_URL = "http://localhost:5000/api/auth";
 
 const updateUser = async (userData) => {
   console.log(userData);
 };
 
 const register = async (userData) => {
-  const respone = await fetch(`${API_URL}/register`, {
+  const respone = await fetch(`${API_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,11 +14,11 @@ const register = async (userData) => {
   });
 
   const result = await respone.json();
-
   if (!respone.ok) {
-    return result;
+    console.log(result);
+    return false;
   } else {
-    return result;
+    return true;
   }
 };
 
@@ -34,11 +34,15 @@ const login = async (userData) => {
   const result = await respone.json();
 
   if (!respone.ok) {
-    return result;
+    return false;
   } else {
     localStorage.setItem("token", result.token);
-    return result;
+    return true;
   }
 };
 
-module.exports = { updateUser, register, login };
+const logout = () => {
+  localStorage.setItem("token", null);
+};
+
+module.exports = { updateUser, register, login, logout };
