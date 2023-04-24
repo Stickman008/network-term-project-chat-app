@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
+const chatRoutes = require("./routes/chat")
+const messageRoutes = require("./routes/message")
 
 // express app
 const app = express();
@@ -25,7 +27,9 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/chat", userRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
+
 
 // connect to database
 const PORT = process.env.PORT || 5000;

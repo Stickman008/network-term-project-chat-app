@@ -47,7 +47,7 @@ const sendMessage = async (req, res) => {
       }
 
       await Chat.findByIdAndUpdate(req.body.chatId, value);
-      message = await message.populate("content.event");
+      //message = await message.populate("content.event");
       res.status(200).json(message);
     }
   } catch (error) {
