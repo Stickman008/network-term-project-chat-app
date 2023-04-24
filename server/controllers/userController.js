@@ -23,18 +23,16 @@ const signupUser = async (req, res) => {
   const {
     email,
     password,
-    first_name,
-    last_name,
-    phone_number,
-    role
+    nickname,
+    icon,
+    color
   } = req.body;
 
   try {
     const user = await User.signup(email, password, {
-      first_name,
-      last_name,
-      phone_number,
-      role,
+      nickname,
+      icon,
+      color,
     });
 
     sendTokenResponse(user, 200, res);
