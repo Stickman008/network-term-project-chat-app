@@ -7,6 +7,7 @@ const {
   getChat,
   deleteChat,
   updateChat,
+  createGroupChat
 } = require("../controllers/chatController");
 
 const { requireAuth } = require("../middleware/auth");
@@ -26,5 +27,9 @@ router.delete("/:id", deleteChat);
 
 // update chat
 router.put("/:id", updateChat);
+
+//create group chat
+router.post("/group", createGroupChat);
+
 
 module.exports = router;

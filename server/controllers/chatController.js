@@ -68,6 +68,26 @@ const accessChat = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+const createGroupChat = async (req, res) => {
+  console.log(req.user)
+  try {
+    // let chat = await Chat.findChatByUser(req.user._id, userId);
+    // if (chat) {
+    //   res.status(200).json(chat);
+    //   return;
+    // }
+    const user_1 = await User.findById(req.user._id);
+      let chat = await Chat.create({
+        isGroupChat : true, 
+        users : [user_1]
+      });
+    console.log("Create new chat");
+    res.status(201).json(chat);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
 
 const getChat = async (req, res) => {
   try {
@@ -133,4 +153,5 @@ module.exports = {
   getChat,
   deleteChat,
   updateChat,
+  createGroupChat
 };
