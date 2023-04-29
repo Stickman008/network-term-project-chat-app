@@ -58,10 +58,8 @@ const getUser = async (req, res) => {
 };
 
 const getUsers = async (req, res) => {
-  const { p, m } = req.query;
   try {
-    const users = await User.find();
-
+    const users = await User.find({}).sort({createdAt: -1});
     res.status(200).json({ result: users });
   } catch (error) {
     res.status(400).json({ error: error.message });
