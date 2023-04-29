@@ -57,6 +57,17 @@ const getUser = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  const { p, m } = req.query;
+  try {
+    const users = await User.find();
+
+    res.status(200).json({ result: users });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // edit a user
 const updateUser = async (req, res) => {
   const id = req.params.id;
@@ -125,4 +136,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  getUsers
 };
