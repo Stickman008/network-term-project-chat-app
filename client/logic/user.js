@@ -1,8 +1,5 @@
 const API_URL = "http://localhost:5000/api/auth";
-
-const updateUser = async (userData) => {
-  console.log(userData);
-};
+const USER_API_URL = "http://localhost:5000/api/user";
 
 const register = async (userData) => {
   const respone = await fetch(`${API_URL}/signup`, {
@@ -42,7 +39,61 @@ const login = async (userData) => {
 };
 
 const logout = () => {
-  localStorage.setItem("token", null);
+  localStorage.removeItem("token");
 };
 
-module.exports = { updateUser, register, login, logout };
+const getUsers = async (p) => {
+  // console.log("getUsers");
+  const token = localStorage.getItem("token");
+  const respone = await fetch(`${USER_API_URL}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const result = await respone.json();
+  if (!respone.ok) {
+    return false;
+  } else {
+    return result.result;
+  }
+};
+
+const getUser = async (token) => {
+  const respone = await fetch(`${USER_API_URL}/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const result = await respone.json();
+  if (!respone.ok) {
+    return false;
+  } else {
+    return result;
+  }
+};
+
+const updateUser = async (userData) => {
+  console.log(userData);
+  const token = localStorage.getItem("token");
+  const respone = await fetch(`${USER_API_URL}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  const result = await respone.json();
+  if (!respone.ok) {
+    return false;
+  } else {
+    return result;
+  }
+};
+
+module.exports = { register, login, logout, getUsers, getUser, updateUser };

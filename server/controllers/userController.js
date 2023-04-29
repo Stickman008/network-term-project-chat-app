@@ -20,13 +20,7 @@ const loginUser = async (req, res) => {
 
 // signup a user
 const signupUser = async (req, res) => {
-  const {
-    email,
-    password,
-    nickname,
-    icon,
-    color
-  } = req.body;
+  const { email, password, nickname, icon, color } = req.body;
 
   try {
     const user = await User.signup(email, password, {
@@ -68,40 +62,11 @@ const getUsers = async (req, res) => {
 
 // edit a user
 const updateUser = async (req, res) => {
-  const id = req.params.id;
-  const { email, password } = req.body;
+  const id = req.user._id;
   try {
     if (!mongoose.isValidObjectId(id)) {
       throw Error("Invalid Id");
     }
-
-    // check email
-    if (typeof email !== "undefined") {
-      const exists = await User.findOne({ email });
-      if (exists) {
-        throw Error("Email already in use");
-      }
-
-      if (!validator.isEmail(email)) {
-        throw Error("Email is invalid");
-      }
-
-      console.log(`change email to ${email}`);
-    }
-    // check password
-    if (typeof password !== "undefined") {
-      if (!validator.isStrongPassword(password)) {
-        throw Error("Password not strong enough");
-      }
-
-      console.log(`change password to ${password}`);
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(password, salt);
-      req.body.password = hash;
-    }
-
-    // validation update field
-    const user = User.findById(id);
 
     // update user
     const new_user = await User.findByIdAndUpdate(id, req.body, {
@@ -128,11 +93,26 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// get me
+const getMe = async (req, res) => {
+  const id = req.user._id;
+  try {
+    if (!mongoose.isValidObjectId(id)) {
+      throw Error("Invalid Id");
+    }
+    const user = await User.findById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   signupUser,
   loginUser,
   getUser,
   updateUser,
   deleteUser,
+  getMe,
   getUsers
 };
