@@ -2,6 +2,7 @@
 import { getUsers } from "@/logic/user";
 import Navbar from "../../../component/navbar";
 import { useEffect, useState } from "react";
+import { accessChat } from "@/logic/chat";
 
 export default function page(params) {
   // pagination variable
@@ -41,8 +42,16 @@ export default function page(params) {
   //   }
   // };
 
-  const chatHandler = () => {
-    console.log("chat");
+  const chatHandler = (user_id) => {
+    // console.log(user_id);
+    accessChat(user_id).then((result) => {
+      if (result) {
+        window.location.href = `/chat/${result._id}`;
+      }
+      else{
+        alert("Can not create this chatroom")
+      }
+    });
   };
 
   return (
@@ -81,14 +90,14 @@ export default function page(params) {
                         }}
                         key={`img_user#${i}`}
                       />
-                      Let's start our chat together!!!!
+                      Let's start our chat together !!!!
                     </p>
                   </div>
                   <button
                     type="button"
                     className="btn btn-outline-primary ms-auto me-1 my-2"
                     style={{ height: "50px" }}
-                    onClick={() => chatHandler()}
+                    onClick={() => chatHandler(user._id)}
                     key={`chat#${i}`}
                   >
                     Chat
