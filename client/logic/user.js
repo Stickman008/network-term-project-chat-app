@@ -54,9 +54,9 @@ const getUsers = async (p) => {
 
   const result = await respone.json();
   if (!respone.ok) {
-    return result;
+    return false;
   } else {
-    return result;
+    return result.result;
   }
 };
 

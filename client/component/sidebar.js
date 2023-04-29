@@ -8,14 +8,14 @@ export default function page({userId}) {
           <div className="col-md-16 bg-light sidebar">
             <div className="sidebar">
               <ul className="nav flex-column">
-              <li class="nav-item">
-                <a href="#" class="nav-link active">Chat 1</a>
+              <li className="nav-item">
+                <a href="#" className="nav-link active">Chat 1</a>
               </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link active">Chat 2</a>
+              <li className="nav-item">
+                <a href="#" className="nav-link active">Chat 2</a>
               </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link active">Chat 3</a>
+              <li className="nav-item">
+                <a href="#" className="nav-link active">Chat 3</a>
               </li>
                 {/* {chats.map((chat) => (
                   <li key={chat.id} className="nav-item">

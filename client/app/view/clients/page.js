@@ -5,36 +5,41 @@ import { useEffect, useState } from "react";
 
 export default function page(params) {
   // pagination variable
-  const [p, setP] = useState(1);
+  // const [p, setP] = useState(1);
   const [data, setData] = useState(null);
-  const [isnewPage, setIsnewPage] = useState(true);
+  // const [isnewPage, setIsnewPage] = useState(true);
 
   useEffect(() => {
-    // if (!localStorage.getItem("token")) {
-    //   alert("please login");
-    //   window.location.href = "/login";
-    //   return;
-    // }
-    setP(1);
+    if (!localStorage.getItem("token")) {
+      alert("please login");
+      window.location.href = "/login";
+      return;
+    }
+    getUsers().then((result) => {
+      if (result) {
+        setData(result);
+      }
+    });
+    // setP(1);
   }, []);
 
-  useEffect(() => {
-    if (isnewPage) {
-      getUsers(p).then((result) => {
-        console.log(result);
-        // setData(result.data);
-      });
-    }
-    setIsnewPage(false);
-  }, [p, isnewPage]);
+  // useEffect(() => {
+  //   if (isnewPage) {
+  //     getUsers(p).then((result) => {
+  //       console.log(result);
+  //       // setData(result.data);
+  //     });
+  //   }
+  //   setIsnewPage(false);
+  // }, [p, isnewPage]);
 
-  const movepage = (page) => {
-    if (page > 0) {
-      const value = parseInt(page);
-      if (value !== p) setIsnewPage(true);
-      setP(value);
-    }
-  };
+  // const movepage = (page) => {
+  //   if (page > 0) {
+  //     const value = parseInt(page);
+  //     if (value !== p) setIsnewPage(true);
+  //     setP(value);
+  //   }
+  // };
 
   const chatHandler = () => {
     console.log("chat");
@@ -43,33 +48,58 @@ export default function page(params) {
   return (
     <>
       <Navbar />
-      <div className="card bg-light my-2 mx-auto" style={{ width: "50rem" }}>
-        <h5 className="card-header">value.name</h5>
-        <div className="d-flex justify-content-end">
-          <div className="card-body py-2 " style={{ maxWidth: "85%" }}>
-            <p className="card-text my-0">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
-                width="30"
-                height="30"
-                className="me-2"
-                style={{ backgroundColor: "yellow", borderRadius: "15px" }}
-              />
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Adipisci, impedit.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="btn btn-outline-primary ms-auto me-1 my-2"
-            style={{ height: "50px" }}
-            onClick={() => chatHandler()}
-          >
-            Chat
-          </button>
-        </div>
-      </div>
-      <nav className="my-2" aria-label="Page navigation example">
+      {data &&
+        data.map((user, i) => {
+          return (
+            <>
+              <div
+                className="card bg-light my-2 mx-auto"
+                style={{ width: "50rem" }}
+                key={`card_#${i}`}
+              >
+                <h5 className="card-header" key={`card_header#${i}`}>
+                  {user.nickname}
+                </h5>
+                <div
+                  className="d-flex justify-content-end"
+                  key={`card_content_#${i}`}
+                >
+                  <div
+                    className="card-body py-2 "
+                    style={{ maxWidth: "85%" }}
+                    key={`card_body_#${i}`}
+                  >
+                    <p className="card-text my-0" key={`p_text#${i}`}>
+                      <img
+                        src={user.icon}
+                        width="30"
+                        height="30"
+                        className="me-2"
+                        style={{
+                          backgroundColor: user.color,
+                          borderRadius: "15px",
+                        }}
+                        key={`img_user#${i}`}
+                      />
+                      Let's start our chat together!!!!
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary ms-auto me-1 my-2"
+                    style={{ height: "50px" }}
+                    onClick={() => chatHandler()}
+                    key={`chat#${i}`}
+                  >
+                    Chat
+                  </button>
+                </div>
+              </div>
+            </>
+          );
+        })}
+
+      {/* <nav className="my-2" aria-label="Page navigation example">
         <ul
           className="pagination justify-content-end "
           style={{ marginRight: "1cm" }}
@@ -88,7 +118,7 @@ export default function page(params) {
             </a>
           </li>
         </ul>
-      </nav>
+      </nav> */}
     </>
   );
 }
