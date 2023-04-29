@@ -17,10 +17,6 @@ const chatSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Message"
     },
-    // groupAdmin: {
-    //     type: mongoose.Types.ObjectId,
-    //     ref: "User"
-    // }
 }, {
     timeStamps: true,
 });

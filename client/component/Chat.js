@@ -13,15 +13,9 @@ export default function Chat(props) {
   const [messageBuffer, setMessageBuffer] = useState([]);
   const messagesEndRef = useRef(null);
 
-  // useEffect(() => {
-  //   const paresString = async (string) => await JSON.parse(string);
-  //   const user = localStorage.getItem("user");
-
-  //   setActive(false);
-  //   paresString(user)
-  //     .then((User) => setUser(User))
-  //     .catch(console.error);
-  // }, []);
+  useEffect(() => {
+    socket.emit("join-room", props.chatId);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -29,16 +23,12 @@ export default function Chat(props) {
 
   const displayMessage = () => {
     let texts = [];
-    messageBuffer.forEach((event) => {
-      const { content, sender, _id: messageId } = event;
-      if (content.text) {
-        const { text } = content;
-        texts.push({ text, sender, messageId });
-      }
-        texts.push({ value, sender, messageId });
-      }
-    );
+    messageBuffer.forEach((mess) => {
+      const { content, sender, _id } = mess;
+      texts.push({ content, sender, _id });
+    });
     setMessages([...texts]);
+    console.log((messages));
   };
 
   useEffect(() => {
@@ -46,21 +36,18 @@ export default function Chat(props) {
   }, [messageBuffer]);
 
   socket.on("receive-message", (mess) => {
-    console.log(mess);
     setMessageBuffer([...messageBuffer, mess]);
   });
 
   const sendMessageHandler = () => {
-    console.log(`Sending [${messageInput}] to chat [${props.chatId}]`);
-
     // TODO implemnt api for sending message
 
     // Add to current Chatwindow messages
-    const newMessage = { text: messageInput, userId: props.currentUserId };
+    const newMessage = { content: messageInput, sender: props.currentUserId , chat:props.chatId};
     // console.log(props.currentUserId, newMessage.userId);
     let data = newMessage
     socket.emit("send-message", data, props.chatId)
-    setMessages([...messages, newMessage]);
+    setMessageBuffer([...messageBuffer, data]);
 
     // Clear Chatbox
     setMessageInput("");
@@ -74,9 +61,9 @@ export default function Chat(props) {
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{ flex: 1, overflowY: "auto" }}>
         {messages.map((message, index) => (
-          <div key={index} className={message.userId === props.currentUserId ? "text-right mb-3" : "text-left mb-3"}>
-            <span className={message.userId === props.currentUserId ? "p-2 bg-primary text-white rounded" : "p-2 bg-light rounded"}>
-              {message.text}
+          <div key={index} className={message.sender === props.currentUserId ? "text-right mb-3" : "text-left mb-3"}>
+            <span className={message.sender === props.currentUserId ? "p-2 bg-primary text-white rounded" : "p-2 bg-light rounded"}>
+              {message.content}
             </span>
           </div>
         ))}
