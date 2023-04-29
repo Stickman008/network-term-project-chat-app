@@ -14,16 +14,16 @@ const submit = async (e, { name, icon, updateIcon, color, updateColor }) => {
     updateColor,
   });
   let updateForm = {};
-  if (name !== "") updateForm.name = name;
+  if (name !== "") updateForm.nickname = name;
   if (updateIcon) updateForm.icon = icon;
   if (updateColor) updateForm.color = color;
   const result = await updateUser(updateForm);
-  // if (result.success) {
-  //   alert("restaurant was created");
-  //   window.location.href = "/";
-  // } else {
-  //   alert(result.msg);
-  // }
+  if (result) {
+    alert("update successful");
+    location.reload();
+  } else {
+    console.log(result);
+  }
 };
 
 export default function page(params) {

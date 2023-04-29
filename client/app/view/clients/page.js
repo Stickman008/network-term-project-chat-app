@@ -1,11 +1,12 @@
 "use client";
+import { getUsers } from "@/logic/user";
 import Navbar from "../../../component/navbar";
 import { useEffect, useState } from "react";
 
 export default function page(params) {
   // pagination variable
   const [p, setP] = useState(1);
-  // const [data, setData] = useState(null);
+  const [data, setData] = useState(null);
   const [isnewPage, setIsnewPage] = useState(true);
 
   useEffect(() => {
@@ -19,9 +20,10 @@ export default function page(params) {
 
   useEffect(() => {
     if (isnewPage) {
-      // getOwnerRestaurants(p).then((result) => {
-      //   setData(result.data);
-      // });
+      getUsers(p).then((result) => {
+        console.log(result);
+        // setData(result.data);
+      });
     }
     setIsnewPage(false);
   }, [p, isnewPage]);
