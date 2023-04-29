@@ -2,32 +2,72 @@
 
 import { useState, useEffect, useRef } from "react";
 import { InputGroup, FormControl, Button, Row, Col } from 'react-bootstrap';
+import io from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const socket = io.connect("http://localhost:5000");
+
 export default function Chat(props) {
-  const [messageText, setMessageText] = useState("");
+  const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const [messageBuffer, setMessageBuffer] = useState([]);
   const messagesEndRef = useRef(null);
+
+  // useEffect(() => {
+  //   const paresString = async (string) => await JSON.parse(string);
+  //   const user = localStorage.getItem("user");
+
+  //   setActive(false);
+  //   paresString(user)
+  //     .then((User) => setUser(User))
+  //     .catch(console.error);
+  // }, []);
 
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const displayMessage = () => {
+    let texts = [];
+    messageBuffer.forEach((event) => {
+      const { content, sender, _id: messageId } = event;
+      if (content.text) {
+        const { text } = content;
+        texts.push({ text, sender, messageId });
+      }
+        texts.push({ value, sender, messageId });
+      }
+    );
+    setMessages([...texts]);
+  };
+
+  useEffect(() => {
+    displayMessage();
+  }, [messageBuffer]);
+
+  socket.on("receive-message", (mess) => {
+    console.log(mess);
+    setMessageBuffer([...messageBuffer, mess]);
+  });
+
   const sendMessageHandler = () => {
-    console.log(`Sending [${messageText}] to chat [${props.chatId}]`);
+    console.log(`Sending [${messageInput}] to chat [${props.chatId}]`);
 
     // TODO implemnt api for sending message
 
     // Add to current Chatwindow messages
-    const newMessage = { text: messageText, userId: props.currentUserId };
+    const newMessage = { text: messageInput, userId: props.currentUserId };
+    // console.log(props.currentUserId, newMessage.userId);
+    let data = newMessage
+    socket.emit("send-message", data, props.chatId)
     setMessages([...messages, newMessage]);
 
     // Clear Chatbox
-    setMessageText("");
+    setMessageInput("");
   };
 
   const handleTextChange = (event) => {
-    setMessageText(event.target.value);
+    setMessageInput(event.target.value);
   };
 
   return (
@@ -49,7 +89,7 @@ export default function Chat(props) {
             style={{ boxShadow: 'none' }}
             placeholder="Type a message..."
             aria-label="Type a message..."
-            value={messageText}
+            value={messageInput}
             onChange={handleTextChange}
           />
           <Button variant="primary" id="button-addon2" onClick={sendMessageHandler}>
