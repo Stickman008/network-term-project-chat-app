@@ -7,7 +7,8 @@ const {
   getChat,
   deleteChat,
   updateChat,
-  createGroupChat
+  createGroupChat,
+  getGroupChats
 } = require("../controllers/chatController");
 
 const { requireAuth } = require("../middleware/auth");
@@ -18,6 +19,9 @@ router.post("/", accessChat);
 
 // fetch chats
 router.get("/", fetchChats);
+
+//get group chats
+router.get("/group", getGroupChats);
 
 // get chat
 router.get("/:id", getChat);
@@ -30,6 +34,7 @@ router.put("/:id", updateChat);
 
 //create group chat
 router.post("/group", createGroupChat);
+
 
 
 module.exports = router;

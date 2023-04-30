@@ -10,7 +10,9 @@ const fetchChats = async (req, res) => {
     let chat = null;
     chat = await Chat.find().sort({ updatedAt: -1 });
     // console.log(chat);
-    chat = chat.filter((chat) => chat.users.includes(mongoose.Types.ObjectId(currentUser)))
+    chat = chat.filter((chat) =>
+      chat.users.includes(mongoose.Types.ObjectId(currentUser))
+    );
     // if (currentUser.isMusician()) {
     //   chat = await Chat.find({ musician: currentUser })
     //     .sort({ updatedAt: -1 })
@@ -77,7 +79,7 @@ const accessChat = async (req, res) => {
   }
 };
 const createGroupChat = async (req, res) => {
-  console.log(req.user)
+  console.log(req.user);
   try {
     // let chat = await Chat.findChatByUser(req.user._id, userId);
     // if (chat) {
@@ -85,17 +87,17 @@ const createGroupChat = async (req, res) => {
     //   return;
     // }
     const user_1 = await User.findById(req.user._id);
-      let chat = await Chat.create({
-        isGroupChat : true, 
-        users : [user_1]
-      });
+    let chat = await Chat.create({
+      isGroupChat: true,
+      users: [user_1],
+      ...req.body,
+    });
     console.log("Create new chat");
     res.status(201).json(chat);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-}
-
+};
 
 const getChat = async (req, res) => {
   try {
@@ -155,11 +157,21 @@ const updateChat = async (req, res) => {
   }
 };
 
+const getGroupChats = async (req, res) => {
+  try {
+    const chat = await Chat.find({ isGroupChat: true }).sort({ updatedAt: -1 });
+    res.status(200).json(chat);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   fetchChats,
   accessChat,
   getChat,
   deleteChat,
   updateChat,
-  createGroupChat
+  createGroupChat,
+  getGroupChats,
 };

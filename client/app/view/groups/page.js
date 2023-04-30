@@ -3,71 +3,65 @@ import Navbar from "../../../component/navbar";
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { accessChat, createGroupChat, getGroupChats } from "@/logic/chat";
 
 export default function page(params) {
-  // pagination variable
-  const [p, setP] = useState(1);
-  // const [data, setData] = useState(null);
-  const [isnewPage, setIsnewPage] = useState(true);
+  const [data, setData] = useState(null);
+  const [isNewgroup, setIsNewgroup] = useState(false);
 
   useEffect(() => {
-    // if (!localStorage.getItem("token")) {
-    //   alert("please login");
-    //   window.location.href = "/login";
-    //   return;
-    // }
-    setP(1);
+    if (!localStorage.getItem("token")) {
+      alert("please login");
+      window.location.href = "/login";
+      return;
+    }
+    getGroupChats().then((result) => {
+      if (result) {
+        setData(result);
+      }
+    });
   }, []);
 
   useEffect(() => {
-    if (isnewPage) {
-      // getOwnerRestaurants(p).then((result) => {
-      //   setData(result.data);
-      // });
+    if (isNewgroup) {
+      // get all group
+      getGroupChats().then((result) => {
+        if (result) {
+          setData(result);
+        }
+      });
     }
-    setIsnewPage(false);
-  }, [p, isnewPage]);
+    setIsNewgroup(false);
+  }, [isNewgroup]);
 
-  const movepage = (page) => {
-    if (page > 0) {
-      const value = parseInt(page);
-      if (value !== p) setIsnewPage(true);
-      setP(value);
-    }
-  };
-
-  const chatHandler = () => {
-    console.log("chat");
+  const chatHandler = (chat_id) => {
+    // console.log(user_id);
+    window.location.href = `/chat/${chat_id}`;
   };
 
   // modal variable
   const [active, setActive] = useState(false);
-  // const [selectData, setSelectData] = useState(null);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const handleCloseModal = () => {
-    // if (date !== "" && table !== "") {
-    //   addReservation(selectData._id, date, parseInt(table))
-    //     .then((result) => {
-    //       console.log(result);
-    //       if (!result.success) {
-    //         alert(result.message);
-    //       } else {
-    //         alert("reservation complete");
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       alert(err);
-    //     });
-    // }
-    // setDate("");
-    // setTable("");
+    if (name !== "") {
+      createGroupChat(name)
+        .then((result) => {
+          // console.log(result);
+          if (result) {
+            setIsNewgroup(true);
+          } else {
+            alert("create group unsucessful");
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }
+    setName("");
     setActive(false);
   };
-  const handleShowModal = (value) => {
+  const handleShowModal = () => {
     setActive(true);
-    // setSelectData(value);
-    // console.log(value);
   };
 
   return (
@@ -76,33 +70,43 @@ export default function page(params) {
       <div className="d-flex flex-row-reverse bd-highlight my-3 me-5">
         <button
           type="button"
-          className="btn btn-success fs-4"
+          className="btn btn-success fs-4 p-1"
           onClick={() => handleShowModal()}
         >
           <AiOutlineUsergroupAdd size={30} />
           Create New Group
         </button>
       </div>
-      <div className="card bg-light my-2 mx-auto" style={{ width: "50rem" }}>
-        <h5 className="card-header">value.name</h5>
-        <div className="d-flex justify-content-end">
-          <div className="card-body py-2 " style={{ maxWidth: "85%" }}>
-            <p className="card-text my-0">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Adipisci, impedit.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="btn btn-outline-primary ms-auto me-1 my-2"
-            style={{ height: "50px" }}
-            onClick={() => chatHandler()}
-          >
-            Chat
-          </button>
-        </div>
-      </div>
-      <nav className="my-2" aria-label="Page navigation example">
+      {data &&
+        data.map((group) => {
+          console.log(group);
+          return (
+            <>
+              <div
+                className="card bg-light my-2 mx-auto"
+                style={{ width: "50rem" }}
+              >
+                <h5 className="card-header">{group.chatName}</h5>
+                <div className="d-flex justify-content-end">
+                  <div className="card-body py-2 " style={{ maxWidth: "85%" }}>
+                    <p className="card-text my-0">
+                      Please Join Our Group Chat!!!
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary ms-auto me-1 my-2"
+                    style={{ height: "50px" }}
+                    onClick={() => chatHandler(group._id)}
+                  >
+                    Chat
+                  </button>
+                </div>
+              </div>
+            </>
+          );
+        })}
+      {/* <nav className="my-2" aria-label="Page navigation example">
         <ul
           className="pagination justify-content-end "
           style={{ marginRight: "1cm" }}
@@ -121,7 +125,7 @@ export default function page(params) {
             </a>
           </li>
         </ul>
-      </nav>
+      </nav> */}
 
       <Modal show={active} onHide={handleCloseModal}>
         <Modal.Header closeButton id="head">
@@ -141,14 +145,6 @@ export default function page(params) {
                 id="Inputname"
                 onChange={(event) => setName(event.target.value)}
                 value={name}
-              />
-              <label className="my-1">Group Description</label>
-              <input
-                type="text"
-                className="form-control"
-                id="Inputdes"
-                onChange={(event) => setDescription(event.target.value)}
-                value={description}
               />
             </div>
             <button
