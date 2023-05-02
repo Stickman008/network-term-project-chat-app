@@ -5,17 +5,20 @@ import Navbar from "../component/navbar";
 import { AiOutlineUser } from "react-icons/ai";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsChatDots } from "react-icons/bs";
+import { fetchChats } from "@/logic/chat";
 
 export default function Home() {
   const homeHandler = async (path) => {
-    // const token = localStorage.getItem("token");
-    // if (!token) alert("please login to use features");
-    // else {
-    // const result = await getUser(token);
-    // if (result.success) {
+    const token = localStorage.getItem("token");
+    if (!token) alert("please login to use features");
     if (path === "/chat") {
-      const chatId = "1234";
-      window.location.href = `${path}/${chatId}`;
+      // const chatId = "1234";
+      const chat = await fetchChats();
+      if (chat) {
+        console.log(chat);
+        const chatId = chat[0]._id
+        window.location.href = `${path}/${chatId}`;
+      }
     } else {
       window.location.href = path;
     }

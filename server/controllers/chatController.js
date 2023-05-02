@@ -8,8 +8,20 @@ const fetchChats = async (req, res) => {
 
   try {
     let chat = null;
-    chat = await Chat.filter(chat => chat.users.includes(currentUser))
-      .sort({ updatedAt: -1 });
+    chat = await Chat.find().sort({ updatedAt: -1 });
+    // console.log(chat);
+    chat = chat.filter((chat) =>
+      chat.users.includes(mongoose.Types.ObjectId(currentUser))
+    );
+    // if (currentUser.isMusician()) {
+    //   chat = await Chat.find({ musician: currentUser })
+    //     .sort({ updatedAt: -1 })
+    //     //.populate("organizer");
+    // } else {
+    //   chat = await Chat.find({ organizer: currentUser })
+    //     .sort({ updatedAt: -1 })
+    //     //.populate("musician");
+    // }
 
     res.status(200).json(chat);
   } catch (error) {
@@ -22,10 +34,17 @@ const accessChat = async (req, res) => {
   const { userId } = req.body;
 
   try {
-    let chat = await Chat.findChatByUser(req.user._id, userId);
+    let chat = await Chat.findChatByUser(
+      req.user._id,
+      mongoose.Types.ObjectId(userId)
+    );
     if (chat) {
       res.status(200).json(chat);
       return;
+    }
+
+    if (String(req.user._id) === userId) {
+      throw Error("User id is not valid");
     }
 
     const user_1 = await User.findById(req.user._id);
@@ -37,22 +56,42 @@ const accessChat = async (req, res) => {
 
     // create new chat if chat haven't already exists
     // if (user_1.isMusician() && user_2.isOrganizer()) {
-      chat = await Chat.create({
-        users : [user_1, user_2]
-      });
-      // chat = await Chat.create({
-      //   organizer: user_2._id,
-      //   musician: user_1._id,
-      // });
+    chat = await Chat.create({
+      users: [user_1, user_2],
+    });
+    // chat = await Chat.create({
+    //   organizer: user_2._id,
+    //   musician: user_1._id,
+    // });
     // } else if (user_1.isOrganizer() && user_2.isMusician()) {
     //   chat = await Chat.create({
     //     organizer: user_1._id,
     //     musician: user_2._id,
     //   });
-    // } 
+    // }
     // else {
     //   throw Error("User role is not valid");
     // }
+    console.log("Create new chat");
+    res.status(201).json(chat);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+const createGroupChat = async (req, res) => {
+  console.log(req.user);
+  try {
+    // let chat = await Chat.findChatByUser(req.user._id, userId);
+    // if (chat) {
+    //   res.status(200).json(chat);
+    //   return;
+    // }
+    const user_1 = await User.findById(req.user._id);
+    let chat = await Chat.create({
+      isGroupChat: true,
+      users: [user_1],
+      ...req.body,
+    });
     console.log("Create new chat");
     res.status(201).json(chat);
   } catch (error) {
@@ -117,10 +156,21 @@ const updateChat = async (req, res) => {
   }
 };
 
+const getGroupChats = async (req, res) => {
+  try {
+    const chat = await Chat.find({ isGroupChat: true }).sort({ updatedAt: -1 });
+    res.status(200).json(chat);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   fetchChats,
   accessChat,
   getChat,
   deleteChat,
   updateChat,
+  createGroupChat,
+  getGroupChats,
 };
