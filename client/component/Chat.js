@@ -1,5 +1,6 @@
 "use client";
 
+import "../app/chat/[chatId]/page.css";
 import { useState, useEffect, useRef } from "react";
 import { InputGroup, FormControl, Button, Row, Col } from 'react-bootstrap';
 import io from "socket.io-client";
@@ -40,7 +41,7 @@ export default function Chat(props) {
       const { content, sender, _id } = mess;
       texts.push({ content, sender, _id });
     });
-    setMessages([...texts]);
+    setMessages([...texts].reverse());
   };
 
   useEffect(() => {
@@ -68,28 +69,41 @@ export default function Chat(props) {
   };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ flex: 1, overflowY: "auto" }}>
+    <div className="chat-container">
+      <div className="message-list">
         {messages.map((message, index) => (
-          <div key={index} className={message.sender === props.currentUserId ? "text-right mb-3" : "text-left mb-3"}>
-            <span className={message.sender === props.currentUserId ? "p-2 bg-primary text-white rounded" : "p-2 bg-light rounded"}>
+          <div
+            key={index}
+            className={`message ${
+              message.sender === props.currentUserId ? "sent" : "received"
+            }`}
+          >
+            <span
+              className={`message-content ${
+                message.sender === props.currentUserId ? "sent" : "received"
+              }`}
+            >
               {message.content}
             </span>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <div>
-        <InputGroup className="mb-3">
+      <div className="massage-input ">
+        <InputGroup className="mb-3 mt-3 d-flex justify-content-center">
           <FormControl
-            // style={{ boxShadow: 'none', maxWidth: '500px' }}
-            style={{ boxShadow: 'none' }}
+            className="message-input-field"
+
             placeholder="Type a message..."
             aria-label="Type a message..."
             value={messageInput}
             onChange={handleTextChange}
           />
-          <Button variant="primary" id="button-addon2" onClick={sendMessageHandler}>
+          <Button
+            variant="primary"
+            id="button-addon2"
+            onClick={sendMessageHandler}
+          >
             Send
           </Button>
         </InputGroup>
@@ -97,4 +111,3 @@ export default function Chat(props) {
     </div>
   );
 }
-
