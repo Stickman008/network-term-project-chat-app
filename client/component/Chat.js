@@ -5,6 +5,8 @@ import { InputGroup, FormControl, Button, Row, Col } from 'react-bootstrap';
 import io from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { fetchMessages, sendMessage } from "@/logic/message";
+
 const socket = io.connect("http://localhost:5000");
 
 export default function Chat(props) {
@@ -14,8 +16,18 @@ export default function Chat(props) {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    fetchMessages(props.chatId).then((data) => {
+      // console.log(data);
+      let texts = [];
+      data.forEach((e) => {
+        const { content, sender, _id } = e;
+        texts.push({ content, sender, _id });
+      })
+      setMessageBuffer([...texts]);
+    }).catch((err) => {
+      console.error(err);
+    });
     socket.emit("join-room", props.chatId);
-    
   }, []);
 
   useEffect(() => {
@@ -29,7 +41,6 @@ export default function Chat(props) {
       texts.push({ content, sender, _id });
     });
     setMessages([...texts]);
-    console.log((messages));
   };
 
   useEffect(() => {
@@ -43,13 +54,11 @@ export default function Chat(props) {
   const sendMessageHandler = () => {
     // TODO implemnt api for sending message
 
-    // Add to current Chatwindow messages
-    const newMessage = { content: messageInput, sender: props.currentUserId , chat:props.chatId};
-    // console.log(props.currentUserId, newMessage.userId);
+    const newMessage = { content: messageInput, sender: props.currentUserId, chat: props.chatId };
     let data = newMessage
     socket.emit("send-message", data, props.chatId)
     setMessageBuffer([...messageBuffer, data]);
-
+    sendMessage(props.currentUserId, props.chatId, messageInput);
     // Clear Chatbox
     setMessageInput("");
   };

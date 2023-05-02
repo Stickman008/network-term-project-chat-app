@@ -20,7 +20,7 @@ export default function navbar(params) {
   useEffect(() => {
     if (token) {
       getUser(token).then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result) {
           // set username
           setUsername(result.nickname);
