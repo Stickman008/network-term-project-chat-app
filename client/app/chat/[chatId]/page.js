@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "../../../component/navbar";
-import Sidebar from "../../../component/sidebar";
+// import Sidebar from "../../../component/sidebar";
 // import Chatbox from "../../../component/Chatbox";
 import Chat from "../../../component/Chat";
 import { useEffect, useState } from "react"
@@ -25,14 +25,15 @@ export default function page(params) {
     <>
       <Navbar />
       <div className="mt-2">
-        <div className="row">
+        {/* <div className="row">
           <div className="col-8 col-md-2 bg-white">
             <Sidebar userId={userId} />
           </div>
           <div className="col-8 mt-2 col-md-10 p-0">
             <Chat currentUserId={userId} chatId={chatId} />
           </div>
-        </div>
+        </div> */}
+        <Chat currentUserId={userId} chatId={chatId} />
       </div>
     </>
   );

@@ -10,15 +10,6 @@ const fetchChats = async (req, res) => {
     let chat = null;
     chat = await Chat.filter(chat => chat.users.includes(currentUser))
       .sort({ updatedAt: -1 });
-    // if (currentUser.isMusician()) {
-    //   chat = await Chat.find({ musician: currentUser })
-    //     .sort({ updatedAt: -1 })
-    //     //.populate("organizer");
-    // } else {
-    //   chat = await Chat.find({ organizer: currentUser })
-    //     .sort({ updatedAt: -1 })
-    //     //.populate("musician");
-    // }
 
     res.status(200).json(chat);
   } catch (error) {
@@ -71,7 +62,6 @@ const accessChat = async (req, res) => {
 
 const getChat = async (req, res) => {
   try {
-    //const chat = await Chat.findById(req.params.id).populate("organizer");
     const chat = await Chat.findById(req.params.id);
     res.status(200).json(chat);
   } catch (error) {

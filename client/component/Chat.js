@@ -15,6 +15,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     socket.emit("join-room", props.chatId);
+    
   }, []);
 
   useEffect(() => {
