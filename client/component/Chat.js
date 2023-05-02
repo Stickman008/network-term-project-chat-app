@@ -2,9 +2,9 @@
 
 import "../app/chat/[chatId]/page.css";
 import { useState, useEffect, useRef } from "react";
-import { InputGroup, FormControl, Button, Row, Col } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Row, Col } from "react-bootstrap";
 import io from "socket.io-client";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import { fetchMessages, sendMessage } from "@/logic/message";
 
@@ -17,17 +17,19 @@ export default function Chat(props) {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    fetchMessages(props.chatId).then((data) => {
-      // console.log(data);
-      let texts = [];
-      data.forEach((e) => {
-        const { content, sender, _id } = e;
-        texts.push({ content, sender, _id });
+    fetchMessages(props.chatId)
+      .then((data) => {
+        console.log(data);
+        let texts = [];
+        data.forEach((e) => {
+          const { content, sender, _id } = e;
+          texts.push({ content, sender, _id });
+        });
+        setMessageBuffer([...texts]);
       })
-      setMessageBuffer([...texts]);
-    }).catch((err) => {
-      console.error(err);
-    });
+      .catch((err) => {
+        console.error(err);
+      });
     socket.emit("join-room", props.chatId);
   }, []);
 
@@ -55,9 +57,13 @@ export default function Chat(props) {
   const sendMessageHandler = () => {
     // TODO implemnt api for sending message
 
-    const newMessage = { content: messageInput, sender: props.currentUserId, chat: props.chatId };
-    let data = newMessage
-    socket.emit("send-message", data, props.chatId)
+    const newMessage = {
+      content: messageInput,
+      sender: props.currentUserId,
+      chat: props.chatId,
+    };
+    let data = newMessage;
+    socket.emit("send-message", data, props.chatId);
     setMessageBuffer([...messageBuffer, data]);
     sendMessage(props.currentUserId, props.chatId, messageInput);
     // Clear Chatbox
@@ -71,29 +77,32 @@ export default function Chat(props) {
   return (
     <div className="chat-container">
       <div className="message-list">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`message ${
-              message.sender === props.currentUserId ? "sent" : "received"
-            }`}
-          >
-            <span
-              className={`message-content ${
+        {messages.map((message, index) => {
+          console.log(message.sender);
+          console.log(props.currentUserId)
+          return (
+            <div
+              key={index}
+              className={`message ${
                 message.sender === props.currentUserId ? "sent" : "received"
               }`}
             >
-              {message.content}
-            </span>
-          </div>
-        ))}
+              <span
+                className={`message-content ${
+                  message.sender === props.currentUserId ? "sent" : "received"
+                }`}
+              >
+                {message.content}
+              </span>
+            </div>
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
       <div className="massage-input ">
         <InputGroup className="mb-3 mt-3 d-flex justify-content-center">
           <FormControl
             className="message-input-field"
-
             placeholder="Type a message..."
             aria-label="Type a message..."
             value={messageInput}

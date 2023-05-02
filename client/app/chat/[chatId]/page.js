@@ -7,18 +7,28 @@ import Chat from "../../../component/Chat";
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation";
 import "./page.css"
+import { getUser } from "@/logic/user";
 export default function page(params) {
   const [userId, setUserId] = useState("12345");
   const chatId = usePathname().split("/").at(-1);
 
   useEffect(() => {
     const paresString = async (string) => await JSON.parse(string);
-    const user = localStorage.getItem("user");
-    paresString(user)
-      .then((userData) => {
-        setUserId(userData._id);
-      })
-      .catch(console.error);
+    const token = localStorage.getItem("token");
+    // paresString(user)
+    //   .then((userData) => {
+    //     setUserId(userData._id);
+    //   })
+    //   .catch(console.error);
+    getUser(token).then((userData) => {
+      if (userData) {
+        setUserId(userData._id) ;
+      }
+      else {
+        alert("please login!!!") ;
+        window.location.href = "/login"
+      }
+    })
   }, []);
 
   return (
