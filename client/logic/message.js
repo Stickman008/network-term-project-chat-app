@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "http://192.168.93.6:5000";
 
 // fetch message
 const fetchMessages = async (chatId) => {

@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { fetchMessages, sendMessage } from "@/logic/message";
 
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect("http://192.168.93.6:5000");
 
 export default function Chat(props) {
   const [messageInput, setMessageInput] = useState("");
