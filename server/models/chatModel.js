@@ -26,6 +26,9 @@ const chatSchema = mongoose.Schema({
 chatSchema.statics.findChatByUser = async function (user_id_1, user_id_2) {
     let chat = null;
     chat = await this.findOne({users : [user_id_1,user_id_2]});
+    if (!chat){
+        chat = await this.findOne({users : [user_id_2,user_id_1]});
+    }
     // if (!chat) {
     //   chat = await this.findOne({
     //     organizer: user_id_2,

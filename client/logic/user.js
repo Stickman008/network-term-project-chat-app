@@ -1,5 +1,6 @@
-const API_URL = "http://192.168.93.6:5000/api/auth";
-const USER_API_URL = "http://192.168.93.6:5000/api/user";
+const {API_HOST} = require("../config/index")
+const API_URL = `${API_HOST}/api/auth`;
+const USER_API_URL = `${API_HOST}/api/user`;
 
 const register = async (userData) => {
   const respone = await fetch(`${API_URL}/signup`, {

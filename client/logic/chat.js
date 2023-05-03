@@ -1,4 +1,5 @@
-const API_URL = "http://192.168.93.6:5000/api/chat";
+const {API_HOST} = require("../config/index")
+const API_URL = `${API_HOST}/api/chat`;
 
 const accessChat = async (userId) => {
   const token = localStorage.getItem("token");

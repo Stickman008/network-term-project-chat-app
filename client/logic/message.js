@@ -1,9 +1,10 @@
-const API_URL = "http://192.168.93.6:5000";
+const {API_HOST} = require("../config/index")
+const API_URL = `${API_HOST}/api/message`;
 
 // fetch message
 const fetchMessages = async (chatId) => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`${API_URL}/api/message/${chatId}`, {
+  const response = await fetch(`${API_URL}/${chatId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +24,7 @@ const fetchMessages = async (chatId) => {
 const sendMessage = async (userId, chatId, mess) => {
   // console.log({userId, chatId, mess});
   const token = localStorage.getItem("token");
-  await fetch(`${API_URL}/api/message`, {
+  await fetch(`${API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
